@@ -1,0 +1,10 @@
+{
+  "group": "PdfAgentGroup",
+  "links": [
+    {
+      "source": "start",
+      "target": "PdfAgentGroup/pdf_extract_table_agent",
+      "type": "hard"
+    }
+  ]
+}
