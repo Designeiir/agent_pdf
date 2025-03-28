@@ -7,5 +7,5 @@
 "center_addr": "http://120.27.248.186:8848"
 #"center_type": "nacos"
 "ip": "120.27.248.186"
-"port": "18080"
-"enabled": false
+"port": "10091"
+"enabled": true
