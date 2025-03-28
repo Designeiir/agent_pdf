@@ -5,6 +5,11 @@
       "source": "start",
       "target": "PdfAgentGroup/pdf_extract_table_agent",
       "type": "hard"
+    },
+    {
+      "source": "PdfAgentGroup/pdf_extract_table_agent",
+      "target": "PdfAgentGroup/worker",
+      "type": "hard"
     }
   ]
 }

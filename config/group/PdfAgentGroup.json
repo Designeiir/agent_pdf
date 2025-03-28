@@ -8,9 +8,10 @@
   "keywords": ["PDF文件处理智能组"],
   "reference":"http://xxx/Scheduling/机器ID",
   "manual":"PDF文件处理智能组",
-  "agents": ["pdf_extract_table_agent"],
+  "agents": ["pdf_extract_table_agent", "worker"],
   "params":[
-    { "title":"task", "name":"task", "type":"string", "notnull":true, "description": "任务", "defaultValue":"" }
+    { "title":"task", "name":"task", "type":"string", "notnull":true, "description": "任务", "defaultValue":"" },
+    { "title":"file_path", "name":"file_path", "type":"string", "notnull":true, "description": "文件路径", "defaultValue":"" }
   ],
   "results":[
     { "title":"result", "name":"result", "type":"string", "notnull":true, "description":"结果", "defaultValue":"" }
