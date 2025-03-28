@@ -83,3 +83,4 @@ wsproto==1.2.0
 yarl==1.9.4
 zipp==3.20.1
 oss2==2.19.1
+pdfplumber==0.11.5
