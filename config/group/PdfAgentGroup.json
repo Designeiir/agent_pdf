@@ -3,12 +3,12 @@
   "name":"PdfAgentGroup",
   "type":"agent",
   "title":"PDF文件处理智能组",
-  "description":"PDF文件处理智能组",
+  "description":"PDF文件处理智能组，用于处理与PDF文件相关的任务",
   "prompt": "",
   "keywords": ["PDF文件处理智能组"],
   "reference":"http://xxx/Scheduling/机器ID",
   "manual":"PDF文件处理智能组",
-  "agents": ["pdf_extract_table_agent", "worker"],
+  "agents": ["pdf_extract_table_agent", "pdf_extract_text_agent"],
   "params":[
     { "title":"task", "name":"task", "type":"string", "notnull":true, "description": "任务", "defaultValue":"" },
     { "title":"file_path", "name":"file_path", "type":"string", "notnull":true, "description": "文件路径", "defaultValue":"" }

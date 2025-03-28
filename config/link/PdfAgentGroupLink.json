@@ -1,15 +1,16 @@
 {
   "group": "PdfAgentGroup",
+  "name": "PdfAgentGroup",
   "links": [
     {
       "source": "start",
       "target": "PdfAgentGroup/pdf_extract_table_agent",
-      "type": "hard"
+      "type": "soft"
     },
     {
-      "source": "PdfAgentGroup/pdf_extract_table_agent",
-      "target": "PdfAgentGroup/worker",
-      "type": "hard"
+      "source": "start",
+      "target": "PdfAgentGroup/pdf_extract_text_agent",
+      "type": "soft"
     }
   ]
 }

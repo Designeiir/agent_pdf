@@ -1,0 +1,16 @@
+{
+  "id":"pdf_extract_text_agent",
+  "name":"pdf_extract_text_agent",
+  "title":"PDF文本提取智能体",
+  "description":"PDF文本提取智能体，用于提取PDF文件中的文本",
+  "keywords": ["PDF", "文本提取"],
+  "manual":"123",
+  "model": "gpt-3.5-turbo",
+  "params":[
+    { "title":"task", "name":"task", "type":"string", "notnull":true, "description": "任务", "defaultValue":"" },
+    { "title":"file_path", "name":"file_path", "type":"txt", "notnull":true, "description": "文件路径", "defaultValue":"" }
+  ],
+  "results":[
+    { "title":"result", "name":"result", "type":"string", "notnull":true, "description":"提取出的文本txt文件路径", "defaultValue":"" }
+  ]
+}

@@ -8,9 +8,9 @@
   "model": "gpt-3.5-turbo",
   "params":[
     { "title":"task", "name":"task", "type":"string", "notnull":true, "description": "任务", "defaultValue":"" },
-    { "title":"file_path", "name":"file_path", "type":"string", "notnull":true, "description": "文件路径", "defaultValue":"" }
+    { "title":"file_path", "name":"file_path", "type":"txt", "notnull":true, "description": "文件路径", "defaultValue":"" }
   ],
   "results":[
-    { "title":"pdf_table", "name":"pdf_table", "type":"string", "notnull":true, "description":"提取出的表格内容", "defaultValue":"" }
+    { "title":"result", "name":"result", "type":"string", "notnull":true, "description":"提取出的表格csv文件路径", "defaultValue":"" }
   ]
 }
