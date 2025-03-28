@@ -2,7 +2,7 @@
   "id":"pdf_extract_text_agent",
   "name":"pdf_extract_text_agent",
   "title":"PDF文本提取智能体",
-  "description":"PDF文本提取智能体，用于提取PDF文件中的文本",
+  "description":"PDF文本提取智能体，可以下载PDF文件并用于提取PDF文件中的文本",
   "keywords": ["PDF", "文本提取"],
   "manual":"123",
   "model": "gpt-3.5-turbo",

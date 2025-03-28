@@ -6,18 +6,31 @@ import requests
 import time
 import pdfplumber
 import pandas as pd
+import agent_network.graph.context as ctx
+import logging
+import oss2
+from io import BytesIO
+import uuid
 
 
 def get_upload_url(file_path):
     # 检查文件是否存在
-    if not os.path.exists(file_path):
-        raise ReportError('File does not exist')
     # 提取文件名
-    file_name = os.path.basename(file_path).replace('.pdf', '')
     # 添加时间信息
-    file_url = time.strftime("%Y%m%d%H%M%S") + file_name
+    file_url = time.strftime("%Y%m%d%H%M%S")
     # 返回
     return file_url
+
+
+def download_file_bytes(object_name):
+    try:
+        file_obj = oss.bucket.get_object(ctx.retrieve_graph_id() + object_name)
+        content = file_obj.read()
+        logging.info("File content:")
+        logging.info(content)
+        return content
+    except oss2.exceptions.OssError as e:
+        logging.error(f"Failed to download file: {e}")
 
 
 # pdf提取表格内容
@@ -26,20 +39,23 @@ class pdf_extract_table_agent(BaseAgent):
         super().__init__(graph, config, logger)
 
     def forward(self, messages, **kwargs):
+
         # 检查参数
         file_path = kwargs.get("file_path")
         if not file_path:
             raise ReportError("pdf_path is not provided", "AgentNetworkPlannerGroup/AgentNetworkPlanner")
         try:
-            # 先尝试从OSS下载文件，如果失败则直接使用URL（也就是再尝试将url当作本地文件使用）。
-            pdf_file = oss.download_file(file_path)
+            # 尝试从OSS下载文件
+            pdf_file = requests.get(file_path).content
         except Exception:
             raise ReportError("Failed to download file from OSS.", "AgentNetworkPlannerGroup/AgentNetworkPlanner")
 
         # 提取pdf表格
         try:
             pdf_table = list()
-            with pdfplumber.load(pdf_file) as pdf:
+            if pdf_file is None:
+                raise ReportError("Failed to download file from OSS.", "AgentNetworkPlannerGroup/AgentNetworkPlanner")
+            with pdfplumber.open(BytesIO(pdf_file)) as pdf:
                 for page in pdf.pages:
                     page_tables = page.extract_tables()
                     # 将表格转为字符串格式
@@ -47,7 +63,7 @@ class pdf_extract_table_agent(BaseAgent):
                         pdf_table.extend(table)
 
             # 建立csv文件名
-            csv_file_name = get_upload_url(file_path) + "_table.csv"
+            csv_file_name = time.strftime("%Y%m%d%H%M%S") + "_" + str(uuid.uuid4()) + "_table.csv"
             # 将表格信息写入暂存文件中
             table_csv = pd.DataFrame(data=pdf_table, index=None)
             table_csv_stream = table_csv.to_csv(index=False)
@@ -80,21 +96,23 @@ class pdf_extract_text_agent(BaseAgent):
         if not file_path:
             raise ReportError("File path is not provided.", "AgentNetworkPlannerGroup/AgentNetworkPlanner")
         try:
-            # 先尝试从OSS下载文件，如果失败则直接使用URL（也就是再尝试将url当作本地文件使用）。
-            pdf_file = oss.download_file(file_path)
+            # 先尝试从OSS下载文件
+            pdf_file = requests.get(file_path).content
         except Exception:
             raise ReportError("Failed to download file from OSS.", "AgentNetworkPlannerGroup/AgentNetworkPlanner")
 
         # 提取文本
         try:
             pdf_text = ""
-            with pdfplumber.load(pdf_file) as pdf:
+            if pdf_file is None:
+                raise ReportError("Failed to download file from OSS.", "AgentNetworkPlannerGroup/AgentNetworkPlanner")
+            with pdfplumber.open(BytesIO(pdf_file)) as pdf:
                 for page in pdf.pages:
                     pdf_text = pdf_text + "\n" + page.extract_text()
             self.log("assistant", pdf_text)
 
             # 建立text文件名
-            txt_file_name = get_upload_url(file_path) + "_text.txt"
+            txt_file_name = time.strftime("%Y%m%d%H%M%S") + "_" + str(uuid.uuid4()) + "_text.txt"
             # 上传到oss上
             oss.bucket.put_object(txt_file_name, pdf_text)
             url = oss.bucket.sign_url('GET', txt_file_name, 604800, slash_safe=True)
